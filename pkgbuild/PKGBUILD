@@ -1,0 +1,162 @@
+# Maintainer: luskaEdivinsky <megalarex11@gmail.com>
+# Contributor: Vilmar Catafesta <vcatafesta@gmail.com>
+
+pkgname=comm-lxqt
+pkgdesc="Meta package for lxqt"
+pkgver=$(date +%Y%m%d)
+pkgrel=$(date +%H%M)
+arch=('any')
+license=('MIT')
+url="https://github.com/communitybig/${pkgname}"
+source=("git+${url}.git")
+md5sums=('SKIP')
+depends=(
+	lxqt-session # Gerenciador de janelas principal
+	openbox              # Highly configurable and lightweight X11 window manager
+	kwin                 # An easy to use, but flexible, composited Window Manager
+	lxqt-wayland-session # Files needed for the LXQt Wayland Session
+
+	# Xorg
+	xorg-server   # Servidor X11
+	xorg-xinit    # Inicialização do Xorg
+	xorg-xrandr   # Configuração de resolução e monitores
+	xorg-xsetroot # Permite definir o papel de parede no Xorg
+	xorg-xrdb     # Banco de dados de recursos do X
+	xterm         # Terminal padrão do Xorg
+
+	# Wayland
+	wlroots       # Biblioteca para composição no Wayland
+	xorg-xwayland # Suporte para aplicativos X11 no Wayland
+	wayland       # Protocolo Wayland
+	wayland-utils # Ferramentas para Wayland
+	wlr-randr     # Alternativa ao xrandr para Wayland
+
+	# Aplicativos essenciais
+	qterminal               # A lightweight Qt-based terminal emulator
+	lxqt-about              # LXQt about dialog.
+	acpid                   # Gerenciamento de eventos de energia
+	bluez                   # Suporte a Bluetooth
+	fprintd                 # Suporte a leitores de impressão digital
+	geoclue                 # Serviço de geolocalização
+	lximage-qt              # The LXQt image viewer and screenshot tool
+	lxqt-runner             # The LXQt application launcher
+	lxqt-powermanagement    # LXQt power management daemon
+	screengrab              # Crossplatform tool for grabbing screenshots of your desktop.
+	xdg-desktop-portal-lxqt # A backend implementation for xdg-desktop-portal using Qt/KDE Frameworks/libfm-qt
+	lxqt-admin              # LXQt system administration tool
+	qps                     # Qt process viewer and manager
+	lxqt-panel              # The LXQt desktop panel
+	lxqt-notificationd      # lxqt-notificationd
+	lxqt-config             # LXQt system configuration
+
+	# Extras para integração e personalização
+	network-manager-applet # Ícone de gerenciamento de rede
+	blueberry              # Gerenciador de Bluetooth
+	#blueman                 # Gerenciador de Bluetooth
+
+	# Áudio
+	pavucontrol # Controle de volume para PulseAudio
+	pipewire    # Alternativa moderna ao PulseAudio para áudio
+	wireplumber # Gerenciador de sessão para PipeWire
+
+	# Interface gráfica e login
+	lightdm             # Gerenciador de login leve
+	lightdm-gtk-greeter # Interface gráfica para LightDM
+	#sddm                    # Gerenciador de login moderno, compatível com Wayland
+	#lxdm                     # Gerenciador de login leve e rápido, usado principalmente no LXDE.
+	#lxdm-biglinux-theme     # Tema para o LXDM adaptado ao BigLinux
+
+	# Extras para Wayland
+	#waybar                   # Barra de status alternativa para Wayland
+	firefox       # Navegador web popular e de código aberto, focado na privacidade e segurança.
+	brave-browser # Navegador baseado no Chromium, focado na privacidade, bloqueio de anúncios e velocidade.
+
+	# Pacotes da comunidade
+	auto-tweaks-browser # Aplica ajustes automáticos ao navegador para otimizar seu desempenho e funcionalidade.
+	bigbashview
+	big-store              # Gerenciador de grandes volumes de dados.
+	bigcontrolcenter-base  # Base para o Big Control Center, interface de gerenciamento do sistema.
+	comm-restore-config    # Restaura configurações padrão de aplicativos de comunicação.
+	timeshift              # Ferramenta para criar snapshots incrementais do sistema.
+	grub-btrfs-timeshift   # Integra o Timeshift ao GRUB em sistemas Btrfs.
+	grub-btrfs             # Permite que o GRUB reconheça snapshots do Btrfs.
+	cups                   # Sistema de impressão comum no Linux.
+	system-config-printer  # Ferramenta gráfica para configurar e gerenciar impressoras.
+	splix                  # Driver de impressão para impressoras Samsung e Xerox.
+	samsung-unified-driver # Drivers unificados para diversas impressoras Samsung.
+	cups-pdf               # Extensão do CUPS para criar PDFs via impressão.
+	bigocrpdf              # Converte documentos PDF em texto editável via OCR.
+	bluez-cups             # Permite impressão via Bluetooth usando o BlueZ.
+	paru                   # AUR helper para instalação de pacotes do Arch User Repository.
+	nautilus               # Gerenciador de arquivos do GNOME.
+	dolphin                # KDE File Manager
+	kate                   # Processador de texto leve.
+	gnome-disk-utility     # Utilitário gráfico para gerenciar discos e dispositivos de armazenamento.
+
+	# GVFS - Sistema de arquivos virtual
+	gvfs          # Implementação do sistema de arquivos virtual para GIO
+	gvfs-afc      # Backend para dispositivos móveis da Apple (AFC)
+	gvfs-dnssd    # Backend para DNS-SD e WebDAV (compartilhamento macOS)
+	gvfs-goa      # Backend para Gnome Online Accounts (OwnCloud, etc.)
+	gvfs-google   # Backend para Google Drive
+	gvfs-gphoto2  # Backend para câmeras PTP e dispositivos MTP
+	gvfs-mtp      # Backend para dispositivos MTP (Android, media players)
+	gvfs-nfs      # Backend para NFS
+	gvfs-onedrive # Backend para Microsoft OneDrive
+	gvfs-smb      # Backend para compartilhamento de arquivos SMB/CIFS (Windows)
+	gvfs-wsdd     # Backend para descoberta de serviços Web Services Dynamic Discovery (Windows)
+)
+
+# Automatically detect and use the correct install file
+if [ -e "${pkgname}.install" ]; then
+	install=${pkgname}.install
+elif [ -e "pkgbuild.install" ]; then
+	install=pkgbuild.install
+fi
+
+prepare() {
+	cd "${srcdir}/${pkgname}"
+	# Add any preparation steps here, if needed
+	# For example: patch -p1 < "${srcdir}/patch-file.patch"
+}
+
+build() {
+	cd "${srcdir}/${pkgname}"
+	# Add build steps here, if needed
+	# For example: make
+}
+
+check() {
+	cd "${srcdir}/${pkgname}"
+	# Add check/test steps here, if needed
+	# For example: make check
+}
+
+package() {
+	cd "${srcdir}/${pkgname}"
+
+	# Determine the correct source directory
+	if [ -d "${pkgname}" ]; then
+		srcdir="${srcdir}/${pkgname}/${pkgname}"
+	else
+		srcdir="${srcdir}/${pkgname}"
+	fi
+
+	# Install files
+	local dirs=("usr" "etc" "opt")
+	for dir in "${dirs[@]}"; do
+		if [ -d "${srcdir}/${dir}" ]; then
+			cp -a "${srcdir}/${dir}" "${pkgdir}/"
+		fi
+	done
+
+	# Install license file if present
+	if [ -f "LICENSE" ]; then
+		install -Dm644 LICENSE "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+	fi
+
+	# Install documentation if present
+	if [ -f "README.md" ]; then
+		install -Dm644 README.md "${pkgdir}/usr/share/doc/${pkgname}/README.md"
+	fi
+}
