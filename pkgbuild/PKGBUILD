@@ -12,10 +12,11 @@ source=("git+${url}.git")
 md5sums=('SKIP')
 depends=(
 	lxqt-session # Gerenciador de janelas principal
+)
+optdepends=(
 	openbox              # Highly configurable and lightweight X11 window manager
 	kwin                 # An easy to use, but flexible, composited Window Manager
 	lxqt-wayland-session # Files needed for the LXQt Wayland Session
-
 	# Xorg
 	xorg-server   # Servidor X11
 	xorg-xinit    # Inicialização do Xorg
@@ -23,14 +24,12 @@ depends=(
 	xorg-xsetroot # Permite definir o papel de parede no Xorg
 	xorg-xrdb     # Banco de dados de recursos do X
 	xterm         # Terminal padrão do Xorg
-
 	# Wayland
 	wlroots       # Biblioteca para composição no Wayland
 	xorg-xwayland # Suporte para aplicativos X11 no Wayland
 	wayland       # Protocolo Wayland
 	wayland-utils # Ferramentas para Wayland
 	wlr-randr     # Alternativa ao xrandr para Wayland
-
 	# Aplicativos essenciais
 	qterminal               # A lightweight Qt-based terminal emulator
 	lxqt-about              # LXQt about dialog.
@@ -48,29 +47,24 @@ depends=(
 	lxqt-panel              # The LXQt desktop panel
 	lxqt-notificationd      # lxqt-notificationd
 	lxqt-config             # LXQt system configuration
-
 	# Extras para integração e personalização
 	network-manager-applet # Ícone de gerenciamento de rede
 	blueberry              # Gerenciador de Bluetooth
 	#blueman                 # Gerenciador de Bluetooth
-
 	# Áudio
 	pavucontrol # Controle de volume para PulseAudio
 	pipewire    # Alternativa moderna ao PulseAudio para áudio
 	wireplumber # Gerenciador de sessão para PipeWire
-
 	# Interface gráfica e login
 	lightdm             # Gerenciador de login leve
 	lightdm-gtk-greeter # Interface gráfica para LightDM
 	#sddm                    # Gerenciador de login moderno, compatível com Wayland
 	#lxdm                     # Gerenciador de login leve e rápido, usado principalmente no LXDE.
 	#lxdm-biglinux-theme     # Tema para o LXDM adaptado ao BigLinux
-
 	# Extras para Wayland
 	#waybar                   # Barra de status alternativa para Wayland
 	firefox       # Navegador web popular e de código aberto, focado na privacidade e segurança.
 	brave-browser # Navegador baseado no Chromium, focado na privacidade, bloqueio de anúncios e velocidade.
-
 	# Pacotes da comunidade
 	auto-tweaks-browser # Aplica ajustes automáticos ao navegador para otimizar seu desempenho e funcionalidade.
 	bigbashview
@@ -92,7 +86,6 @@ depends=(
 	dolphin                # KDE File Manager
 	kate                   # Processador de texto leve.
 	gnome-disk-utility     # Utilitário gráfico para gerenciar discos e dispositivos de armazenamento.
-
 	# GVFS - Sistema de arquivos virtual
 	gvfs          # Implementação do sistema de arquivos virtual para GIO
 	gvfs-afc      # Backend para dispositivos móveis da Apple (AFC)
@@ -114,39 +107,17 @@ elif [ -e "pkgbuild.install" ]; then
 	install=pkgbuild.install
 fi
 
-prepare() {
-	cd "${srcdir}/${pkgname}"
-	# Add any preparation steps here, if needed
-	# For example: patch -p1 < "${srcdir}/patch-file.patch"
-}
-
-build() {
-	cd "${srcdir}/${pkgname}"
-	# Add build steps here, if needed
-	# For example: make
-}
-
-check() {
-	cd "${srcdir}/${pkgname}"
-	# Add check/test steps here, if needed
-	# For example: make check
-}
-
 package() {
 	cd "${srcdir}/${pkgname}"
 
-	# Determine the correct source directory
-	if [ -d "${pkgname}" ]; then
-		srcdir="${srcdir}/${pkgname}/${pkgname}"
-	else
-		srcdir="${srcdir}/${pkgname}"
-	fi
+	install -dm755 "${pkgdir}/usr/share/${pkgname}"
+	printf "%s\n" "${optdepends[@]}" >"${pkgdir}/usr/share/${pkgname}/optdepends"
 
-	# Install files
+	# Copiar a estrutura de /etc, /usr e /opt para /usr/share/${pkgname}
 	local dirs=("usr" "etc" "opt")
 	for dir in "${dirs[@]}"; do
-		if [ -d "${srcdir}/${dir}" ]; then
-			cp -a "${srcdir}/${dir}" "${pkgdir}/"
+		if [ -d "${srcdir}/${pkgname}/${dir}" ]; then
+			cp -a "${srcdir}/${pkgname}/${dir}" "${pkgdir}/usr/share/${pkgname}/"
 		fi
 	done
 
